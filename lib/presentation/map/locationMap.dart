@@ -16,14 +16,14 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return
-
-     SizedBox(
-        height: 260,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(70), // İstediğiniz border radius değerini burada belirleyin
+      child: SizedBox(
+        height: 300,
         child: GoogleMap(
           initialCameraPosition: CameraPosition(
             target: LatLng(widget.x, widget.y), // Belirtilen koordinatlara odaklanan kamera pozisyonu
-            zoom: 15, // Yakınlık seviyesi
+            zoom: 16, // Yakınlık seviyesi
           ),
           onMapCreated: (GoogleMapController controller) {
             _controller = controller;
@@ -39,7 +39,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
           },
         ),
-      );
-
+      ),
+    );
   }
 }

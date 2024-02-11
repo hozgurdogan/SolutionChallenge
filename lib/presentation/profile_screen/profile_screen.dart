@@ -259,7 +259,8 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       Text(
                         "Follow",
-                        style: theme.textTheme.bodyLarge,
+                        style:TextStyle(fontSize: 12),
+
                       ),
                     ],
                   ),

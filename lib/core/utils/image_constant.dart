@@ -95,7 +95,7 @@ class ImageConstant {
   static String imgFluentarrowjoin20regularErrorcontainer =
       '$imagePath/img_fluentarrowjoin20regular_errorcontainer.svg';
 
-  static String imgArrowLeft = '$imagePath/img_arrow_left.svg';
+  static String imgArrowLeft = '$imagePath/leftarrow.png';
 
   static String imgNotificationsTeal200 =
       '$imagePath/img_notifications_teal_200.svg';
