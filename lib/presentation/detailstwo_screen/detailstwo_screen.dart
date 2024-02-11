@@ -18,90 +18,94 @@ import 'package:readmore/readmore.dart';
 
 // ignore_for_file: must_be_immutable
 class DetailstwoScreen extends StatelessWidget {
-
   final String? organizationID;
+
   DetailstwoScreen({Key? key, required this.organizationID}) : super(key: key);
 
   Completer<GoogleMapController> googleMapController = Completer();
-  Organization organizationData=Organization();
+  Organization organizationData = Organization();
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-
-
-
-    return FutureBuilder<Organization>(
-      future:OrganizationService().getOrganizationDetail(organizationId:organizationID!),
-      builder: (context,snapshot){
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Veri yüklenene kadar yükleniyor göstergesi göster.
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          // Hata varsa hata mesajını göster.
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }else{
-          InfoUser user=InfoUser();
-          user=snapshot.data!.user!;
-          organizationData.user=user;
-
+    return
         //  organizationData.user=snapshot.data!.user!;
-          return  SafeArea(
-              child: Scaffold(
-                  appBar: _buildAppBar(context),
-                  body: SizedBox(
-                      width: double.maxFinite,
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        SizedBox(height: 12.v),
+        SafeArea(
+            child: Scaffold(
+              backgroundColor: appTheme.gray100,
+                appBar: _buildAppBar(context),
+                body: FutureBuilder<Organization>(
+                    future: OrganizationService()
+                        .getOrganizationDetail(organizationId: organizationID!),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        // Veri yüklenene kadar yükleniyor göstergesi göster.
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        // Hata varsa hata mesajını göster.
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        InfoUser user = InfoUser();
+                        user = snapshot.data!.user!;
+                        organizationData.user = user;
 
-                        Column(children: [
-                           _buildEventList(context,snapshot.data!),
-                          SizedBox(height: 16.v),
-                         _buildDetailCard(context),
-                          SizedBox(height: 16.v),
-
-                         MapScreen(x: snapshot.data!.latitude!, y: snapshot.data!.longitude!),
-                          SizedBox(height: 27.v),
-                          Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                  padding: EdgeInsets.only(left: 31.h),
-                                  child: Text("Etkinlik Açıklaması",
-                                      style: CustomTextStyles.titleSmallBold))),
-                          SizedBox(
-                              width: 316.h,
-                              child: ReadMoreText(
-                                  snapshot.data!.description!,
-                                  trimLines: 2,
-                                  colorClickableText: theme
-                                      .colorScheme.primaryContainer
-                                      .withOpacity(1),
-                                  trimMode: TrimMode.Line,
-                                  trimCollapsedText: "Read More",
-                                  moreStyle: theme.textTheme.bodyMedium,
-                                  lessStyle: theme.textTheme.bodyMedium)),
-                          SizedBox(height: 19.v),
-                          _buildEventDetails(context)
-                        ])
-                      ])),
-                  bottomNavigationBar: Padding(
-                      padding: EdgeInsets.only(left: 14.h, right: 11.h),
-                      child: _buildBottomBar(context)),
-                  floatingActionButton: _buildFloatingActionButton(context))
-          );
-        }
-
-    }
-
-    );
+                        return SizedBox(
+                            width: double.maxFinite,
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(height: 12.v),
+                                  Column(children: [
+                                    _buildEventList(context, snapshot.data!),
+                                    SizedBox(height: 16.v),
+                                    _buildDetailCard(context),
+                                    SizedBox(height: 16.v),
+                                    MapScreen(
+                                        x: snapshot.data!.latitude!,
+                                        y: snapshot.data!.longitude!),
+                                    SizedBox(height: 27.v),
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                            padding:
+                                                EdgeInsets.only(left: 31.h),
+                                            child: Text("Etkinlik Açıklaması",
+                                                style: CustomTextStyles
+                                                    .titleSmallBold))),
+                                    SizedBox(
+                                        width: 316.h,
+                                        child: ReadMoreText(
+                                            snapshot.data!.description!,
+                                            trimLines: 2,
+                                            colorClickableText: theme
+                                                .colorScheme.primaryContainer
+                                                .withOpacity(1),
+                                            trimMode: TrimMode.Line,
+                                            trimCollapsedText: "Read More",
+                                            moreStyle:
+                                                theme.textTheme.bodyMedium,
+                                            lessStyle:
+                                                theme.textTheme.bodyMedium)),
+                                    SizedBox(height: 19.v),
+                                    _buildEventDetails(context)
+                                  ])
+                                ]));
+                      }
+                    }),
+                bottomNavigationBar: Padding(
+                    padding: EdgeInsets.only(left: 14.h, right: 11.h),
+                    child: _buildBottomBar(context)),
+                floatingActionButton: _buildFloatingActionButton(context)));
   }
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
+    return
+      CustomAppBar(
         leadingWidth: 54.h,
         leading: AppbarLeadingImage(
+
             imagePath: ImageConstant.imgArrowLeft,
             margin: EdgeInsets.only(left: 30.h, top: 13.v, bottom: 16.v),
             onTap: () {
@@ -116,7 +120,7 @@ class DetailstwoScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildEventList(BuildContext context,Organization organization) {
+  Widget _buildEventList(BuildContext context, Organization organization) {
     return SizedBox(
         height: 40.v,
         child: ListView.separated(
@@ -127,7 +131,7 @@ class DetailstwoScreen extends StatelessWidget {
             },
             itemCount: 1,
             itemBuilder: (context, index) {
-              return Eventlist1ItemWidget(organization:organization);
+              return Eventlist1ItemWidget(organization: organization);
             }));
   }
 
@@ -161,7 +165,9 @@ class DetailstwoScreen extends StatelessWidget {
                                 padding: EdgeInsets.only(left: 5.h),
                                 child: _buildSixtyEight(context,
                                     lead: "Gönüllü ",
-                                    name: organizationData.user!.name! +" "+organizationData.user!.surname!)),
+                                    name: organizationData.user!.name! +
+                                        " " +
+                                        organizationData.user!.surname!)),
                             Spacer(),
                             Padding(
                                 padding:
@@ -170,7 +176,6 @@ class DetailstwoScreen extends StatelessWidget {
                                     style: CustomTextStyles
                                         .bodySmallPrimaryContainer))
                           ]))),
-
             ])));
   }
 
@@ -195,8 +200,7 @@ class DetailstwoScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildEventDetails(BuildContext context) {
-
-     return Text("");
+    return Text("");
     // SizedBox(
     //     height: 252.v,
     //     width: double.maxFinite,

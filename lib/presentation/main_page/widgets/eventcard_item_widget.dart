@@ -104,7 +104,7 @@ class EventcardItemWidget extends StatelessWidget {
                                       bottom: 3.v,
                                     ),
                                     child: Text(
-                                      snapshot.data![index].city!,
+                                      snapshot.data![index].town!,
                                       style: theme.textTheme.bodySmall,
                                     ),
                                   ),

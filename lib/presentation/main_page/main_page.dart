@@ -1,5 +1,6 @@
 import 'package:ahmet_s_application2/service/OrganizationService.dart';
 
+import '../../widgets/custom_bottom_bar.dart';
 import '../main_page/widgets/eventcard_item_widget.dart';
 import 'package:ahmet_s_application2/core/app_export.dart';
 import 'package:ahmet_s_application2/widgets/custom_elevated_button.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/material.dart';
 
 // ignore_for_file: must_be_immutable
 class MainPage extends StatelessWidget {
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
   MainPage({Key? key})
       : super(
           key: key,
@@ -22,42 +25,66 @@ class MainPage extends StatelessWidget {
       Scaffold(
         resizeToAvoidBottomInset: false,
         body:
-
-          Container(
+        Container(
             width: double.maxFinite,
             decoration: AppDecoration.fillGray,
             child: Column(
               children: [
                 _buildSeven(context),
                 SizedBox(
-                  height: 827.v,
+                  height: 600.v,
                   width: double.maxFinite,
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      _buildEventCard(context),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          height: 127.v,
-                          width: double.maxFinite,
-                          margin: EdgeInsets.only(bottom: 68.v),
-                          decoration: BoxDecoration(
-                            color: appTheme.gray10001.withOpacity(0.5),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                            child: _buildEventCard(context)),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: 127.v,
+                            width: double.maxFinite,
+                            margin: EdgeInsets.only(bottom: 68.v),
+                            decoration: BoxDecoration(
+                              color: appTheme.gray10001.withOpacity(0.5),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-        );
+          bottomNavigationBar: Padding(
+              padding: EdgeInsets.only(left: 14.h, right: 11.h),
+              child: _buildBottomBar(context)),
+      );
+
 
 
   }
-
+  String getCurrentRoute(BottomBarEnum type) {
+    switch (type) {
+      case BottomBarEnum.Home:
+        return AppRoutes.mainPage;
+      case BottomBarEnum.Score:
+        return "/";
+      case BottomBarEnum.Profile:
+        return "/";
+      default:
+        return "/";
+    }
+  }
+  Widget _buildBottomBar(BuildContext context) {
+    return CustomBottomBar(onChanged: (BottomBarEnum type) {
+      Navigator.pushNamed(navigatorKey.currentContext!, getCurrentRoute(type));
+    });
+  }
   /// Section Widget
   Widget _buildCreateButton(BuildContext context) {
     return CustomElevatedButton(
@@ -72,6 +99,7 @@ class MainPage extends StatelessWidget {
       leftIcon: Container(
         margin: EdgeInsets.only(right: 5.h),
         child: CustomImageView(
+
           imagePath: ImageConstant.imgOuimlcreatesinglemetricjob,
           height: 15.adaptSize,
           width: 15.adaptSize,
@@ -105,6 +133,7 @@ class MainPage extends StatelessWidget {
           ),
           _buildCreateButton(context),
           CustomImageView(
+
             imagePath: ImageConstant.imgNotifications,
             height: 25.adaptSize,
             width: 25.adaptSize,
@@ -134,21 +163,28 @@ class MainPage extends StatelessWidget {
           decoration: AppDecoration.outlineDeepPurpleA.copyWith(
             borderRadius: BorderRadiusStyle.roundedBorder5,
           ),
-          child: ListView.separated(
+          child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
-            shrinkWrap: true,
-            separatorBuilder: (
-              context,
-              index,
-            ) {
-              return SizedBox(
-                height: 14.v,
-              );
-            },
-            itemCount: 1,
-            itemBuilder: (context, index) {
-              return EventcardItemWidget();
-            },
+            child: ListView.separated(
+              physics: BouncingScrollPhysics(),
+              shrinkWrap: true,
+              separatorBuilder: (
+                context,
+                index,
+              ) {
+                return SizedBox(
+                  height: 14.v,
+                );
+              },
+              itemCount: 1,
+              itemBuilder: (context, index) {
+                return
+
+                     EventcardItemWidget();
+
+
+              },
+            ),
           ),
         ),
 
