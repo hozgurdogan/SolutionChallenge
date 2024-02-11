@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.app_gdsc.app-mergeDebugResources-25:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\mrahm\\.gradle\\caches\\transforms-3\\7bfd93c17cb71938c023e2a5f60b8c42\\transformed\\core-1.9.0\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                }
+            ]
+        }
+    ]
+}
