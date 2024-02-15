@@ -12,15 +12,6 @@ import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
 
-  
-
-
-
-
-
-
-
-
 
   ProfileScreen({Key? key})
       : super(
@@ -145,7 +136,6 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 7.v),
-                    _buildHeadUpFollowing(context),
                     SizedBox(height: 37.v),
                     Padding(
                       padding: EdgeInsets.only(
@@ -171,13 +161,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 32.v),
-                    Padding(
-                      padding: EdgeInsets.only(left: 27.h),
-                      child: Text(
-                        "About me",
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                    ),
+
                     SizedBox(height: 5.v),
                     CustomImageView(
                       imagePath: ImageConstant.imgVector1,

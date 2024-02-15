@@ -1,4 +1,5 @@
 import 'package:ahmet_s_application2/core/app_export.dart';
+import 'package:ahmet_s_application2/presentation/create_account_screen/create_account_screen.dart';
 import 'package:ahmet_s_application2/service/AuthService.dart';
 import 'package:ahmet_s_application2/widgets/custom_elevated_button.dart';
 import 'package:ahmet_s_application2/widgets/custom_icon_button.dart';
@@ -9,8 +10,8 @@ import 'package:flutter/material.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key})
       : super(
-          key: key,
-        );
+    key: key,
+  );
 
   TextEditingController emailController = TextEditingController();
 
@@ -135,7 +136,7 @@ class LoginScreen extends StatelessWidget {
                               decoration: IconButtonStyleHelper.fillPrimary,
                               child: CustomImageView(
                                 imagePath:
-                                    ImageConstant.imgMaterialSymbolsLightCheck,
+                                ImageConstant.imgMaterialSymbolsLightCheck,
                               ),
                             ),
                             Padding(
@@ -156,10 +157,10 @@ class LoginScreen extends StatelessWidget {
                     CustomElevatedButton(
                       onPressed: (){
                         if(_formKey.currentState!.validate())
-                          {
-                            AuthService().login(context: context, email: emailController.text, password: passwordController.text);
+                        {
+                          AuthService().login(context: context, email: emailController.text, password: passwordController.text);
 
-                          }
+                        }
                       },
                       text: "Sign In",
                       margin: EdgeInsets.only(
@@ -223,11 +224,20 @@ class LoginScreen extends StatelessWidget {
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 14.h),
-                            child: Text(
-                              "Sign Up",
-                              style: CustomTextStyles.bodyLargePrimary,
+                            child: GestureDetector(
+                              onTap: () {
+                                // "Sign Up" yazısına tıklandığında belirtilen sayfaya yönlendirilir
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateAccountScreen(),));
+                              },
+                              child: Text(
+                                "Sign Up",
+                                style: CustomTextStyles.bodyLargePrimary.copyWith(
+                                  decoration: TextDecoration.underline, // Metni altı çizili yapar
+                                ),
+                              ),
                             ),
                           ),
+
                         ],
                       ),
                     ),

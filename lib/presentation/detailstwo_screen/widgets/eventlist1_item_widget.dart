@@ -35,25 +35,42 @@ Icon(Icons.location_on_outlined,size: 25,color: Colors.red),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(organization.title!,style: TextStyle(fontSize: 20)),
-                      Text(organization.city!+"/"+organization.town!,style: TextStyle(fontSize: 15),),
+                      Text(organization.title!,style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                      Text(organization.city!+"/"+organization.town!,style: TextStyle(fontSize: 10),),
                     ],
                   ),
                 ),
-                CustomImageView(
-                  color: Colors.red,
-                  imagePath: ImageConstant.imgSolarStarBold,
-                  height: 20.adaptSize,
-                  width: 20.adaptSize,
-                  margin: EdgeInsets.only(top: 3.v, bottom: 5.v),
-                ),
+                // CustomImageView(
+                //   color: Colors.red,
+                //   imagePath: ImageConstant.imgSolarStarBold,
+                //   height: 20.adaptSize,
+                //   width: 20.adaptSize,
+                //   margin: EdgeInsets.only(top: 3.v, bottom: 5.v),
+                // ),
+                    Column(children: [
+                      Text("Kazanılacak puan",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black, // İstenilen renk
+                          fontSize: 10, // İstenilen font büyüklüğü
+                        ),
+                      ),
+                      Row(children: [
 
-                Text(organization.score!.toString(),
-                  style: TextStyle(
-                    color: Colors.black, // İstenilen renk
-                    fontSize: 18, // İstenilen font büyüklüğü
-                  ),
-                ),
+                        Icon(Icons.star),
+                        Text(organization.score!.toString(),
+                          style: TextStyle(
+                            color: Colors.black, // İstenilen renk
+                            fontSize: 17, // İstenilen font büyüklüğü
+                          ),
+                        ),
+
+
+                      ],)
+
+
+                    ],),
+
               ],
             ),
             // Row(

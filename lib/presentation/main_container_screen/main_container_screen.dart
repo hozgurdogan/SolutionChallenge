@@ -40,9 +40,15 @@ class MainContainerScreen extends StatelessWidget {
       case BottomBarEnum.Score:
         return "/";
       case BottomBarEnum.Profile:
+
+        return "/";
+      case BottomBarEnum.AllLocation:
         return "/";
       default:
         return "/";
+
+
+
     }
   }
 
