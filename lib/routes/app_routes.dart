@@ -11,6 +11,9 @@ class AppRoutes {
 
   static const String mainPage = '/main_page';
 
+  static const String createAccountScreen = '/create_account_screen'; // Define route for Create Account screen
+
+
   static const String mainContainerScreen = '/main_container_screen';
 
   static const String detailstwoScreen = '/detailstwo_screen';

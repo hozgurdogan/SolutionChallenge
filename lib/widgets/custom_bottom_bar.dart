@@ -121,6 +121,7 @@ enum BottomBarEnum {
   Home,
   Score,
   Profile,
+  AllLocation,
 }
 
 class BottomMenuModel {

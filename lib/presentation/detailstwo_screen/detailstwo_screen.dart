@@ -50,47 +50,49 @@ class DetailstwoScreen extends StatelessWidget {
                         user = snapshot.data!.user!;
                         organizationData.user = user;
 
-                        return SizedBox(
-                            width: double.maxFinite,
-                            child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(height: 12.v),
-                                  Column(children: [
-                                    _buildEventList(context, snapshot.data!),
-                                    SizedBox(height: 16.v),
-                                    _buildDetailCard(context),
-                                    SizedBox(height: 16.v),
-                                    MapScreen(
-                                        x: snapshot.data!.latitude!,
-                                        y: snapshot.data!.longitude!),
-                                    SizedBox(height: 27.v),
-                                    Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                            padding:
-                                                EdgeInsets.only(left: 31.h),
-                                            child: Text("Etkinlik Açıklaması",
-                                                style: CustomTextStyles
-                                                    .titleSmallBold))),
-                                    SizedBox(
-                                        width: 316.h,
-                                        child: ReadMoreText(
-                                            snapshot.data!.description!,
-                                            trimLines: 2,
-                                            colorClickableText: theme
-                                                .colorScheme.primaryContainer
-                                                .withOpacity(1),
-                                            trimMode: TrimMode.Line,
-                                            trimCollapsedText: "Read More",
-                                            moreStyle:
-                                                theme.textTheme.bodyMedium,
-                                            lessStyle:
-                                                theme.textTheme.bodyMedium)),
-                                    SizedBox(height: 19.v),
-                                    _buildEventDetails(context)
-                                  ])
-                                ]));
+                        return SingleChildScrollView(
+                          child: SizedBox(
+                              width: double.maxFinite,
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(height: 12.v),
+                                    Column(children: [
+                                      _buildEventList(context, snapshot.data!),
+                                      SizedBox(height: 16.v),
+                                      _buildDetailCard(context),
+                                      SizedBox(height: 16.v),
+                                      MapScreen(
+                                          x: snapshot.data!.latitude!,
+                                          y: snapshot.data!.longitude!),
+                                      SizedBox(height: 27.v),
+                                      Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 31.h),
+                                              child: Text("Etkinlik Açıklaması",
+                                                  style: CustomTextStyles
+                                                      .titleSmallBold))),
+                                      SizedBox(
+                                          width: 316.h,
+                                          child: ReadMoreText(
+                                              snapshot.data!.description!,
+                                              trimLines: 2,
+                                              colorClickableText: theme
+                                                  .colorScheme.primaryContainer
+                                                  .withOpacity(1),
+                                              trimMode: TrimMode.Line,
+                                              trimCollapsedText: "Devamını Oku",
+                                              moreStyle:
+                                                  TextStyle(fontSize: 12,color: Colors.lightBlue),
+                                              lessStyle:
+                                              TextStyle(fontSize: 12,color: Colors.lightBlue),)),
+                                      SizedBox(height: 19.v),
+                                      _buildEventDetails(context)
+                                    ])
+                                  ])),
+                        );
                       }
                     }),
                 bottomNavigationBar: Padding(
@@ -142,7 +144,7 @@ class DetailstwoScreen extends StatelessWidget {
         elevation: 0,
         color: appTheme.gray300,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusStyle.roundedBorder28),
+            borderRadius:BorderRadius.circular(15)),
         child: Container(
             height: 57.v,
             width: 304.h,
@@ -156,11 +158,7 @@ class DetailstwoScreen extends StatelessWidget {
                       child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomImageView(
-                                imagePath: ImageConstant.imgLock,
-                                height: 25.adaptSize,
-                                width: 25.adaptSize,
-                                margin: EdgeInsets.only(top: 3.v, bottom: 5.v)),
+                       Icon(Icons.person,size: 35,),
                             Padding(
                                 padding: EdgeInsets.only(left: 5.h),
                                 child: _buildSixtyEight(context,
@@ -311,10 +309,10 @@ class DetailstwoScreen extends StatelessWidget {
   }) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(lead,
-          style: theme.textTheme.bodyMedium!
+          style: TextStyle(fontSize: 12,fontWeight: FontWeight.w200)
               .copyWith(color: theme.colorScheme.primary)),
       Text(name,
-          style: theme.textTheme.titleSmall!
+          style: TextStyle(fontSize: 10,fontWeight: FontWeight.w700)
               .copyWith(color: theme.colorScheme.primary))
     ]);
   }
