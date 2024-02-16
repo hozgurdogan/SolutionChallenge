@@ -1,7 +1,7 @@
 import 'package:ahmet_s_application2/core/app_export.dart';
 import 'package:ahmet_s_application2/presentation/award_screen/award_screen.dart';
 import 'package:ahmet_s_application2/presentation/main_page/main_page.dart';
-import 'package:ahmet_s_application2/presentation/profile_screen/profile_screen.dart';
+import 'package:ahmet_s_application2/presentation/profile_screen/profile.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomBar extends StatefulWidget {
@@ -108,7 +108,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => AwardScreen(),));
           } if(selectedIndex==2)
           {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(),));
           }
           setState(() {});
         },
@@ -121,6 +121,7 @@ enum BottomBarEnum {
   Home,
   Score,
   Profile,
+  AllLocation,
 }
 
 class BottomMenuModel {

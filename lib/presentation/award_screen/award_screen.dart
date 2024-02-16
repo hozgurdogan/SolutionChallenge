@@ -14,8 +14,7 @@ class AwardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
             backgroundColor: appTheme.gray100,
             appBar: _buildAppBar(context),
             body: Container(
@@ -121,7 +120,8 @@ class AwardScreen extends StatelessWidget {
                 ])),
             bottomNavigationBar: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.h),
-                child: _buildBottomBar(context))));
+                child: _buildBottomBar(context)));
+
   }
 
   /// Section Widget

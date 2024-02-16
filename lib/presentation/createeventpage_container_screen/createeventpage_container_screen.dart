@@ -1,11 +1,11 @@
 import 'package:ahmet_s_application2/core/app_export.dart';
-import 'package:ahmet_s_application2/presentation/main_page/main_page.dart';
+import 'package:ahmet_s_application2/presentation/createeventpage_page/createeventpage_page.dart';
 import 'package:ahmet_s_application2/widgets/custom_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
 // ignore_for_file: must_be_immutable
-class MainContainerScreen extends StatelessWidget {
-  MainContainerScreen({Key? key}) : super(key: key);
+class CreateeventpageContainerScreen extends StatelessWidget {
+  CreateeventpageContainerScreen({Key? key}) : super(key: key);
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
@@ -15,13 +15,13 @@ class MainContainerScreen extends StatelessWidget {
         child: Scaffold(
             body: Navigator(
                 key: navigatorKey,
-                initialRoute: AppRoutes.mainPage,
+                initialRoute: AppRoutes.createeventpagePage,
                 onGenerateRoute: (routeSetting) => PageRouteBuilder(
                     pageBuilder: (ctx, ani, ani1) =>
                         getCurrentPage(routeSetting.name!),
                     transitionDuration: Duration(seconds: 0))),
             bottomNavigationBar: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.h),
+                padding: EdgeInsets.only(left: 29.h, right: 26.h),
                 child: _buildBottomBar(context))));
   }
 
@@ -36,27 +36,21 @@ class MainContainerScreen extends StatelessWidget {
   String getCurrentRoute(BottomBarEnum type) {
     switch (type) {
       case BottomBarEnum.Home:
-        return AppRoutes.mainPage;
+        return AppRoutes.createeventpagePage;
       case BottomBarEnum.Score:
         return "/";
       case BottomBarEnum.Profile:
-
-        return "/";
-      case BottomBarEnum.AllLocation:
         return "/";
       default:
         return "/";
-
-
-
     }
   }
 
   ///Handling page based on route
   Widget getCurrentPage(String currentRoute) {
     switch (currentRoute) {
-      case AppRoutes.mainPage:
-        return MainPage();
+      case AppRoutes.createeventpagePage:
+        return CreateeventpagePage();
       default:
         return DefaultWidget();
     }
