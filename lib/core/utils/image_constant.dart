@@ -2,6 +2,7 @@ class ImageConstant {
   // Image folder path
   static String imagePath = 'assets/images';
 
+  static String imgRectangle2='$imagePath/Rectangle2.png';
   // Login images
   static String imgLogo = '$imagePath/img_logo.svg';
 
