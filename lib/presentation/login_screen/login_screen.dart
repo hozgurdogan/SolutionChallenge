@@ -5,7 +5,11 @@ import 'package:ahmet_s_application2/widgets/custom_elevated_button.dart';
 import 'package:ahmet_s_application2/widgets/custom_icon_button.dart';
 import 'package:ahmet_s_application2/widgets/custom_text_form_field.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../create_account_screen/register.dart';
+import '../main_page/main_page.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key})
@@ -77,11 +81,7 @@ class LoginScreen extends StatelessWidget {
                         textInputType: TextInputType.emailAddress,
                         prefix: Container(
                           margin: EdgeInsets.fromLTRB(20.h, 10.v, 18.h, 10.v),
-                          child: CustomImageView(
-                            imagePath: ImageConstant.imgSolaruserbroken,
-                            height: 30.adaptSize,
-                            width: 30.adaptSize,
-                          ),
+                          child: Icon(Icons.email,size: 25,color: Colors.white,)
                         ),
                         prefixConstraints: BoxConstraints(
                           maxHeight: 50.v,
@@ -106,11 +106,7 @@ class LoginScreen extends StatelessWidget {
                         textInputType: TextInputType.visiblePassword,
                         prefix: Container(
                           margin: EdgeInsets.fromLTRB(16.h, 9.v, 18.h, 11.v),
-                          child: CustomImageView(
-                            imagePath: ImageConstant.imgSolarlockpasswordbroken,
-                            height: 30.adaptSize,
-                            width: 30.adaptSize,
-                          ),
+                          child: Icon(Icons.password,color: Colors.white,size: 25,)
                         ),
                         prefixConstraints: BoxConstraints(
                           maxHeight: 50.v,
@@ -126,31 +122,31 @@ class LoginScreen extends StatelessWidget {
                           left: 5.h,
                           right: 24.h,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CustomIconButton(
-                              height: 30.adaptSize,
-                              width: 30.adaptSize,
-                              padding: EdgeInsets.all(3.h),
-                              decoration: IconButtonStyleHelper.fillPrimary,
-                              child: CustomImageView(
-                                imagePath:
-                                ImageConstant.imgMaterialSymbolsLightCheck,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                top: 5.v,
-                                bottom: 4.v,
-                              ),
-                              child: Text(
-                                "Forget your password?",
-                                style: CustomTextStyles.bodyLargePrimary_1,
-                              ),
-                            ),
-                          ],
-                        ),
+                        // child: Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     CustomIconButton(
+                        //       height: 30.adaptSize,
+                        //       width: 30.adaptSize,
+                        //       padding: EdgeInsets.all(3.h),
+                        //       decoration: IconButtonStyleHelper.fillPrimary,
+                        //       // child: CustomImageView(
+                        //       //   imagePath:
+                        //       //   ImageConstant.imgMaterialSymbolsLightCheck,
+                        //       // ),
+                        //     ),
+                        //     // Padding(
+                        //     //   padding: EdgeInsets.only(
+                        //     //     top: 5.v,
+                        //     //     bottom: 4.v,
+                        //     //   ),
+                        //     //   // child: Text(
+                        //     //   //   "Forget your password?",
+                        //     //   //   style: CustomTextStyles.bodyLargePrimary_1,
+                        //     //   // ),
+                        //     // ),
+                        //   ],
+                        // ),
                       ),
                     ),
                     SizedBox(height: 26.v),
@@ -164,17 +160,12 @@ class LoginScreen extends StatelessWidget {
                       },
                       text: "Sign In",
                       margin: EdgeInsets.only(
-                        left: 32.h,
+                        left: 27.h,
                         right: 29.h,
                       ),
                       leftIcon: Container(
-                        margin: EdgeInsets.only(right: 30.h),
-                        child: CustomImageView(
-                          imagePath: ImageConstant
-                              .imgMaterialsymbolslightloginoutlinerounded,
-                          height: 29.adaptSize,
-                          width: 29.adaptSize,
-                        ),
+                        margin: EdgeInsets.only(right: 20.h),
+                        child: Icon(Icons.login,size: 35,color: Colors.black,)
                       ),
                       buttonStyle: CustomButtonStyles.fillOnPrimary,
                     ),
@@ -187,26 +178,37 @@ class LoginScreen extends StatelessWidget {
                     SizedBox(height: 15.v),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomIconButton(
+                      children:
+
+                      [
+
+                        CustomIconButton
+                          (
+                          onTap: () {
+                            AuthService().signInWithGoogle(context);
+                          },
                           height: 50.adaptSize,
                           width: 50.adaptSize,
                           padding: EdgeInsets.all(9.h),
                           child: CustomImageView(
-                            imagePath: ImageConstant.imgFlatColorIconsGoogle,
+                            imagePath: ImageConstant.imgGoogle,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 24.h),
-                          child: CustomIconButton(
-                            height: 50.adaptSize,
-                            width: 50.adaptSize,
-                            padding: EdgeInsets.all(10.h),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgLogosFacebook,
-                            ),
-                          ),
-                        ),
+                          padding: EdgeInsets.only(left: 7.h),
+                            child : Text("Sign with Google ",style: TextStyle(fontSize: 15),)),
+
+                        // Padding(
+                        //   padding: EdgeInsets.only(left: 24.h),
+                        //   child: CustomIconButton(
+                        //     height: 50.adaptSize,
+                        //     width: 50.adaptSize,
+                        //     padding: EdgeInsets.all(10.h),
+                        //     child: CustomImageView(
+                        //       imagePath: ImageConstant.imgLogosFacebook,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                     SizedBox(height: 25.v),
@@ -227,7 +229,7 @@ class LoginScreen extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () {
                                 // "Sign Up" yazısına tıklandığında belirtilen sayfaya yönlendirilir
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateAccountScreen(),));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterresponsiveScreen(),));
                               },
                               child: Text(
                                 "Sign Up",

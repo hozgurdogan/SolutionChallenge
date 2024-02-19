@@ -1,3 +1,4 @@
+import 'package:ahmet_s_application2/models/Organization.dart';
 import 'package:flutter/material.dart';
 
 class InfoUser
@@ -7,7 +8,10 @@ class InfoUser
   String? email;
   String? username;
   String? password;
-  List<String>?activities;
+  List<Organization>?activities=[];
+  List<Organization>?attendedActivities=[];
+
+  List<Map<Organization,bool>>katildiklari=[];
   int? score;
 
 

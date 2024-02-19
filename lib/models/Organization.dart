@@ -19,6 +19,7 @@ class Organization
   DateTime? endDate;
   double? latitude;
   double? longitude;
-  late List<InfoUser?>participants;
+  late List<InfoUser?>participants=[];
+  List<Map<InfoUser,bool>>parts=[];
 
 }

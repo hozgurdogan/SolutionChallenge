@@ -44,6 +44,8 @@ class ImageConstant {
   static String imgWhatsappGRsel87x84 =
       '$imagePath/img_whatsapp_g_rsel_87x84.png';
 
+  static String imgGoogle= '$imagePath/GOOG-0ed88f7c.png';
+
   // Common images
   static String imgRewind = '$imagePath/img_rewind.svg';
 

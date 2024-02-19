@@ -19,6 +19,74 @@ class AuthService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 
+  Future<bool> isGoogleSignIn() async {
+    User? user = auth.currentUser;
+    if (user != null) {
+      List<UserInfo> userInfo = user.providerData;
+      for (var info in userInfo) {
+        if (info.providerId == 'google.com') {
+          return true; // Kullanıcı Google ile giriş yapmış
+        }
+      }
+    }
+    return false; // Kullanıcı Google ile giriş yapmamış
+  }
+
+ signInWithGoogle(BuildContext context)
+  async {
+    final GoogleSignInAccount? googleUser=await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication googleAuth=await googleUser!.authentication;
+
+    final credential=GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken
+
+    );
+    UserCredential userCredential=await FirebaseAuth.instance.signInWithCredential(credential);
+
+    QuerySnapshot snapshot=await  firestore.collection("Users").where("email",isEqualTo: userCredential.user?.email).get();
+
+    if(snapshot!.docs!=null)
+      {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainPage(),));
+
+      }
+    else
+      {
+        print("İlk defa giriş yaptı");
+    final userName = userCredential.user?.displayName; // Kullanıcı adı
+
+    String? firstName;
+    String? lastName;
+
+    // Kullanıcı adı "Ad Soyad" formatındaysa
+    if (userName != null && userName.contains(' ')) {
+      final nameParts = userName.split(' ');
+      firstName = nameParts[0];
+      lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : null;
+    } else {
+      firstName = userName;
+    }
+
+      if(userCredential.user !=null)
+        {
+          await firestore.collection('Users').doc(userCredential.user!.uid).set({
+            'email': userCredential.user!.email,
+            'name': firstName,
+            'score': 0, // Kayıt yapılırken başlangıç puanı olarak 0 atandı
+            'surname': lastName,
+            'username': "",
+            'activities': [],
+             'attendedEvents':[],   // Kullanıcının aktiviteleri için boş bir liste oluşturuldu
+          });
+
+
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainPage(),));
+        }
+      }
+  }
+
+
   bool logOut()
   {
     auth.signOut();
@@ -71,13 +139,13 @@ class AuthService {
             'score': 0, // Kayıt yapılırken başlangıç puanı olarak 0 atandı
             'surname': surname,
             'username': username,
-            'activities': [], // Kullanıcının aktiviteleri için boş bir liste oluşturuldu
+            'activities': [],
+            'attendedEvents': [], // Kullanıcının aktiviteleri için boş bir liste oluşturuldu
+// Kullanıcının aktiviteleri için boş bir liste oluşturuldu
           });
 
           // Kullanıcıyı etkinlik listesine ekle
-          await firestore.collection('Users').doc(userCredential.user!.uid).update({
-            'activities': FieldValue.arrayUnion(['Events/TU2V2W3RZpkPMRaJn4sK']),
-          });
+
         }
 
         Navigator.pushNamed(context, AppRoutes.loginScreen);

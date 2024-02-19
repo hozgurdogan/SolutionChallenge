@@ -1,3 +1,4 @@
+import 'package:ahmet_s_application2/presentation/map/searchmap.dart';
 import 'package:ahmet_s_application2/service/OrganizationService.dart';
 
 import '../../widgets/custom_bottom_bar.dart';
@@ -8,6 +9,11 @@ import 'package:ahmet_s_application2/widgets/custom_elevated_button.dart';
 import 'package:ahmet_s_application2/widgets/custom_search_view.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+
+
+
+
+
 
 // ignore_for_file: must_be_immutable
 class MainPage extends StatefulWidget {
@@ -97,7 +103,7 @@ class _MainPage extends State<MainPage>  {
   Widget _buildCreateButton(BuildContext context) {
     return CustomElevatedButton(
       onPressed: () {
-       Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateeventpagePage(),));
+       Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateEventPage(),));
       },
       height: 29.v,
       width: 92.h,
@@ -158,7 +164,7 @@ class _MainPage extends State<MainPage>  {
   }
 
   /// Section Widget
-  Widget _buildEventCard(BuildContext context) {
+  Widget    _buildEventCard(BuildContext context) {
     return
        Align(
         alignment: Alignment.topCenter,

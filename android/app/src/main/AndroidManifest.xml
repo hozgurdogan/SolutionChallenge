@@ -5,8 +5,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
     <uses-permission android:name="android.permission.health.WRITE_HEART_RATE"/>
-
-    <!-- io.flutter.app.FlutterApplication is an android.app.Application that
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.health.READ_STEPS"/>
+    <uses-permission android:name="android.permission.health.WRITE_STEPS"/>
+        <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
          additional functionality it is fine to subclass or reimplement
@@ -18,7 +20,7 @@
 
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-                   android:value="AIzaSyD9hsrf9D4xEQeGfF65oz2IEfYvUvBA350"/>
+                   android:value="AIzaSyB18SvHHof2W6vuDUlgpQ2Q7nCkh8ozwF8"/>
         <activity
 
             android:name=".MainActivity"
