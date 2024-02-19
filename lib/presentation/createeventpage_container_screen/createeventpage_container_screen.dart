@@ -50,7 +50,7 @@ class CreateeventpageContainerScreen extends StatelessWidget {
   Widget getCurrentPage(String currentRoute) {
     switch (currentRoute) {
       case AppRoutes.createeventpagePage:
-        return CreateeventpagePage();
+        return CreateEventPage();
       default:
         return DefaultWidget();
     }

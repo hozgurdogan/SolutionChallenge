@@ -37,7 +37,8 @@ class EventcardItemWidget extends StatelessWidget {
                 return Align(
                   alignment: Alignment.center,
                   child: Container(
-                    margin: EdgeInsets.only(bottom: 20.h),
+
+                    margin: EdgeInsets.only(bottom: 10.h),
                     decoration: AppDecoration.fillGray300.copyWith(
                       borderRadius: BorderRadiusStyle.roundedBorder20,
                     ),
@@ -45,8 +46,8 @@ class EventcardItemWidget extends StatelessWidget {
                       children: [
                         CustomImageView(
                           imagePath: ImageConstant.imgRectangle14,
-                          height: 120.v,
-                          width: 150.h,
+                          height: 130.v,
+                          width: 140.h,
                           radius: BorderRadius.circular(
                             10.h,
                           ),
@@ -54,7 +55,7 @@ class EventcardItemWidget extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(
                             left: 7.h,
-                            top: 7.v,
+                            top: 50.v,
                             bottom: 7.v,
                           ),
                           child: Column(
@@ -69,92 +70,103 @@ class EventcardItemWidget extends StatelessWidget {
                                     Text(
                                       snapshot.data![index].title!,
                                       style: TextStyle(
-                                          fontSize: 17,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
                               ),
                               SizedBox(height: 11.v),
-                              Row(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CustomImageView(
-                                    imagePath:
-                                        ImageConstant.imgFluentMdl2DateTime,
-                                    height: 15.adaptSize,
-                                    width: 15.adaptSize,
-                                    margin: EdgeInsets.only(top: 1.v),
-                                  ),
+                                  // CustomImageView(
+                                  //   imagePath:
+                                  //       ImageConstant.imgFluentMdl2DateTime,
+                                  //   height: 15.adaptSize,
+                                  //   width: 15.adaptSize,
+                                  //   margin: EdgeInsets.only(top: 1.v),
+                                  // ),
                                   Padding(
                                     padding: EdgeInsets.only(
                                       left: 1.h,
-                                      top: 1.v,
+                                      top: 4.v,
                                       bottom: 3.v,
                                     ),
-                                    child: Text(
-                                      DateFormat.yMMMM().format(snapshot.data![index].startDate!),
-                                      style: TextStyle(fontSize: 12),
+                                    child: Row(
+                                      children:[
+                                        Icon(Icons.date_range,size: 15,),
+                                        Text(
+                                        DateFormat.yMMMM().format(snapshot.data![index].startDate!),
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      ]
                                     ),
                                   ),
-                                  CustomImageView(
-                                    imagePath: ImageConstant.imgCodiconLocation,
-                                    height: 15.adaptSize,
-                                    width: 15.adaptSize,
-                                    margin: EdgeInsets.only(left: 5.h),
-                                  ),
+                                  // CustomImageView(
+                                  //   imagePath: ImageConstant.imgCodiconLocation,
+                                  //   height: 15.adaptSize,
+                                  //   width: 15.adaptSize,
+                                  //   margin: EdgeInsets.only(left: 5.h),
+                                  // ),
                                   Padding(
                                     padding: EdgeInsets.only(
                                       top: 1.v,
                                       bottom: 3.v,
                                     ),
-                                    child: Text(
-                                      snapshot.data![index].town!,
-                                      style: TextStyle(fontSize: 13),
+                                    child: Row(
+
+                                      children:[
+
+                                        Icon(Icons.location_city_outlined,size: 20,),
+                                        Text(
+                                          snapshot.data![index].city!+"/"+
+                                        snapshot.data![index].town!,
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    ]
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 15.v),
                               Container(
                                 width: 125.h,
                                 margin: EdgeInsets.only(right: 15.h),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 4.v, left: 15.v),
-                                      child: Text(
-                                        DateFormat.Hm().format(
-                                            snapshot.data![index].startDate!),
-                                        style: TextStyle(fontSize: 13),
+                                      padding: EdgeInsets.only(top: 1.v, left: 0.v),
+                                      child: Row(
+                                          children:[
+                                            Icon(Icons.access_time,size: 20,),
+                                            Text(
+                                              DateFormat.Hm().format(snapshot.data![index].startDate!),
+                                              style: TextStyle(fontSize: 13),
+                                            ),
+                                          ]
                                       ),
                                     ),
-                                    Spacer(),
-                                    // CustomImageView(
-                                    //   imagePath: ImageConstant.imgHealthiconsAwa,
-                                    //   height: 15.adaptSize,
-                                    //   width: 15.adaptSize,
-                                    // ),
                                     Padding(
                                       padding: EdgeInsets.only(
-                                        top: 4.v,
-                                        bottom: 3.v,
+                                        left: 0.h,
                                       ),
-                                      child: Text(
-                                        snapshot.data![index].score!
-                                                .toString() +
-                                            " Puan",
-                                        style: TextStyle(fontSize: 13),
+                                      child: Row(
+                                          children: [
+                                            Icon(Icons.star,size: 25,),
+                                            Text(
+                                              snapshot.data![index].score!.toString() + " Point",
+                                              style: TextStyle(fontSize: 13),
+                                            ),
+                                          ]
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 30.v),
+
                               SizedBox(
-                                width: 150.h,
+                                width: 200.h,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -175,9 +187,10 @@ class EventcardItemWidget extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             GestureDetector(
+
                                               child: Text(
-                                                "Detay Gör",
-                                                style: TextStyle(fontSize: 12),
+                                                "Etkinlik Detayı",
+                                                style: TextStyle(fontSize: 12,fontWeight: FontWeight.w500),
                                               ),
                                               onTap: () {
                                                 Navigator.of(context).push(
@@ -244,15 +257,10 @@ class EventcardItemWidget extends StatelessWidget {
                                         },
                                         height: 25.v,
                                         text: "Join",
+
                                         margin: EdgeInsets.only(left: 6.h),
                                         leftIcon: Container(
-                                          margin: EdgeInsets.only(right: 4.h),
-                                          child: CustomImageView(
-                                            imagePath:
-                                            ImageConstant.imgFluentarrowjoin20regular,
-                                            height: 15.adaptSize,
-                                            width: 15.adaptSize,
-                                          ),
+                                          margin: EdgeInsets.only(right: 2.h),
                                         ),
                                         buttonTextStyle: CustomTextStyles.bodySmall10,
                                       ),
