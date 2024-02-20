@@ -6,6 +6,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  geolocator: ^11.0.0
+
   cached_network_image: ^3.3.0
   flutter_svg: ^2.0.9
   dotted_border: ^2.1.0

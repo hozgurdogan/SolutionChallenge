@@ -24,6 +24,7 @@ class AuthService {
     if (user != null) {
       List<UserInfo> userInfo = user.providerData;
       for (var info in userInfo) {
+        print("Provider ıd"+auth.currentUser!.uid!);
         if (info.providerId == 'google.com') {
           return true; // Kullanıcı Google ile giriş yapmış
         }

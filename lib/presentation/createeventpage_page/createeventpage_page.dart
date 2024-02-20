@@ -1,15 +1,26 @@
-import 'package:ahmet_s_application2/core/app_export.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/places.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:ahmet_s_application2/service/OrganizationService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../core/utils/image_constant.dart';
-import '../../widgets/app_bar/appbar_leading_image.dart';
-import '../../widgets/app_bar/appbar_title_button.dart';
-import '../../widgets/app_bar/appbar_trailing_image.dart';
-import '../../widgets/app_bar/custom_app_bar.dart';
+import '../../models/UserInfo.dart';
+
+void main() {
+  runApp(MaterialApp(
+    theme: ThemeData(
+      primaryColor: Colors.blueGrey[800],
+      hintColor: Colors.tealAccent[400],
+      scaffoldBackgroundColor: Colors.grey[200],
+      textTheme: TextTheme(
+        bodyText1: TextStyle(color: Colors.black),
+        bodyText2: TextStyle(color: Colors.black),
+        headline6: TextStyle(color: Colors.white),
+      ),
+    ),
+    home: CreateEventPage(),
+  ));
+}
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage();
@@ -19,34 +30,29 @@ class CreateEventPage extends StatefulWidget {
 }
 
 class _CreateEventPageState extends State<CreateEventPage> {
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-        leadingWidth: 54.h,
-        leading: AppbarLeadingImage(
-            imagePath: ImageConstant.imgArrowLeft,
-            margin: EdgeInsets.only(left: 30.h, top: 13.v, bottom: 16.v),
-            onTap: () {
-              onTapArrowLeft(context);
-            }),
-        actions: [
-          AppbarTrailingImage(
-              imagePath: ImageConstant.imgNotifications,
-              margin: EdgeInsets.symmetric(horizontal: 28.h, vertical: 14.v))
-        ],
-        styleType: Style.bgFill);
-  }
-  TextEditingController _locationController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
+  bool _mapInteractionEnabled = false;
+
+  final OrganizationService _eventService = OrganizationService();
+
+  String eventTitle = '';
+  String eventScore = '';
+  String eventDescription = '';
+  String eventCity = '';
+  DateTime _startDate = DateTime.now();
+  DateTime _endDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    return
-      Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: _buildAppBar(context),
-        
-        body: Padding(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Create Event'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,40 +62,147 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
-              _buildTextFormField('Event Title'),
+              _buildTextFormField('Event Title', (value) {
+                eventTitle = value;
+              }),
               SizedBox(height: 10),
-              _buildTextFormField('Event Score'),
+              _buildTextFormField('Event Score', (value) {
+                eventScore = value;
+              }),
               SizedBox(height: 10),
+              _buildTextFormField('Event Description', (value) {
+                eventDescription = value;
+              }),
+              SizedBox(height: 10),
+              _buildTextFormField('City', (value) {
+                eventCity = value;
+              }),
+              SizedBox(height: 10),
+              SizedBox(height: 20),
               _buildDateTimeField('Start Date', true),
               SizedBox(height: 10),
               _buildDateTimeField('End Date', false),
-              SizedBox(height: 10),
-              _buildTextFormField('City'),
-              SizedBox(height: 10),
-              _buildLocationField(),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Etkinliği oluştur
-                },
-                child: Text('Create'),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        _showMapPicker(context);
+                      },
+                      icon: Icon(
+                        Icons.map,
+                        color: Colors.white,
+                      ),
+
+                      label: Text(
+                      'Set Event Location on Map',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+
+                      ),
+                    ),
+
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        _showUserLocation();
+                      },
+                      icon: Icon(
+                        Icons.gps_fixed,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        'Use Current Location',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 20),
-              Expanded(
-                child: GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  markers: _markers,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(37.42796133580664, -122.085749655962),
-                    zoom: 15,
+              GestureDetector(
+                onTap: () {
+                  if (!_mapInteractionEnabled) {
+                    setState(() {
+                      _mapInteractionEnabled = true;
+                    });
+                  }
+                },
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    onTap: _mapInteractionEnabled ? _onMapTap : null,
+                    markers: _markers,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(37.42796133580664, -122.085749655962),
+                      zoom: 15,
+                    ),
                   ),
                 ),
               ),
+              SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
             ],
           ),
         ),
-      );
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: ElevatedButton(
+          onPressed: () async {
+            String? currentUserUid = await _auth.currentUser?.uid;
+            if (currentUserUid != null) {
+              Position position = await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+              );
+              LatLng userLocation = LatLng(position.latitude, position.longitude);
 
+              _eventService.registerEvent(
+                title: eventTitle,
+                score: int.parse(eventScore),
+                description: eventDescription,
+                city: eventCity,
+                town: 'Köy',
+                startDate: _startDate,
+                endDate: _endDate,
+                latitude: userLocation.latitude,
+                longitude: userLocation.longitude,
+                participants: [],
+                partts: [],
+                userId: currentUserUid,
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Current user not found')),
+              );
+            }
+          },
+          child: Text('Create'),
+        ),
+      ),
+    );
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -98,7 +211,32 @@ class _CreateEventPageState extends State<CreateEventPage> {
     });
   }
 
-  Widget _buildTextFormField(String label,
+  void _onMapTap(LatLng latLng) {
+    if (_mapInteractionEnabled) {
+      _addMarker(latLng);
+    }
+  }
+
+  void _addMarker(LatLng latLng) {
+    final MarkerId markerId = MarkerId('selected_location');
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: latLng,
+    );
+
+    setState(() {
+      _markers.clear();
+      _markers.add(marker);
+    });
+
+    if (_mapController != null) {
+      _mapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(latLng, 15),
+      );
+    }
+  }
+
+  Widget _buildTextFormField(String label, Function(String) onChanged,
       {TextInputType keyboardType = TextInputType.text}) {
     return TextFormField(
       decoration: InputDecoration(
@@ -113,27 +251,48 @@ class _CreateEventPageState extends State<CreateEventPage> {
         contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
       ),
       keyboardType: keyboardType,
+      onChanged: onChanged,
     );
   }
 
   Widget _buildDateTimeField(String label, bool isStartDate) {
-    return InkWell(
-      onTap: () => _selectDateTime(context, isStartDate),
-      child: AbsorbPointer(
-        child: TextFormField(
-          decoration: InputDecoration(
-            labelText: label,
-            border: OutlineInputBorder(),
+    String formattedDateTime = isStartDate ? _formatDateTime(_startDate) : _formatDateTime(_endDate);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () => _selectDateTime(context, isStartDate),
+          child: AbsorbPointer(
+            child: TextFormField(
+              decoration: InputDecoration(
+                labelText: label,
+                border: OutlineInputBorder(),
+              ),
+            ),
           ),
         ),
-      ),
+        SizedBox(height: 10),
+        SizedBox(
+          height: 40,
+          child: Text(
+            'Selected Date and Time: $formattedDateTime',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
+          ),
+        ),
+        SizedBox(height: 10),
+      ],
     );
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}';
   }
 
   Future<void> _selectDateTime(BuildContext context, bool isStartDate) async {
     final DateTime? pickedDateTime = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: isStartDate ? _startDate : _endDate,
       firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
@@ -141,7 +300,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     if (pickedDateTime != null) {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.now(),
+        initialTime: TimeOfDay.fromDateTime(isStartDate ? _startDate : _endDate),
       );
 
       if (pickedTime != null) {
@@ -155,70 +314,52 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
         setState(() {
           if (isStartDate) {
-            // Başlangıç tarihi buraya yazılacak
+            _startDate = selectedDateTime;
           } else {
-            // Bitiş tarihi buraya yazılacak
+            _endDate = selectedDateTime;
           }
         });
       }
     }
   }
 
-  Widget _buildLocationField() {
-    return TextFormField(
-      controller: _locationController,
-      decoration: InputDecoration(
-        labelText: 'Location',
-        suffixIcon: IconButton(
-          icon: Icon(Icons.search),
-          onPressed: () async {
-            Prediction? prediction = await PlacesAutocomplete.show(
-              context: context,
-              apiKey: 'AIzaSyB18SvHHof2W6vuDUlgpQ2Q7nCkh8ozwF8',
-              mode: Mode.overlay,
-              language: 'en',
-              components: [Component(Component.country, 'us')],
-            );
-
-            if (prediction != null) {
-              _locationController.text = prediction.description!;
-              _addMarker(prediction.placeId!);
-            }
-          },
-        ),
-        border: OutlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue, width: 2.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1.0),
-        ),
-        contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+  Future<void> _showMapPicker(BuildContext context) async {
+    LatLng? selectedLocation = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MapPickerPage(),
       ),
     );
-  }
 
-  void _addMarker(String placeId) async {
-    final places = GoogleMapsPlaces(apiKey: 'AIzaSyB18SvHHof2W6vuDUlgpQ2Q7nCkh8ozwF8');
-
-    PlacesDetailsResponse place = await places.getDetailsByPlaceId(placeId);
-    final lat = place.result.geometry!.location.lat;
-    final lng = place.result.geometry!.location.lng;
-
-    setState(() {
-      _markers.clear();
-      _markers.add(Marker(
-        markerId: MarkerId(placeId),
-        position: LatLng(lat, lng),
-      ));
-    });
-
-    if (_mapController != null) {
-      _mapController!.animateCamera(CameraUpdate.newLatLng(LatLng(lat, lng)));
+    if (selectedLocation != null) {
+      _addMarker(selectedLocation);
     }
   }
 
-  onTapArrowLeft(BuildContext context) {
-    Navigator.pop(context);
+  void _showUserLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    LatLng userLocation = LatLng(position.latitude, position.longitude);
+    _addMarker(userLocation);
+  }
+}
+
+class MapPickerPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Pick Location'),
+      ),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: LatLng(37.42796133580664, -122.085749655962),
+          zoom: 15,
+        ),
+        onTap: (LatLng latLng) {
+          Navigator.of(context).pop(latLng);
+        },
+      ),
+    );
   }
 }

@@ -34,14 +34,14 @@ class _MainPage extends State<MainPage>  {
   Widget build(BuildContext context) {
     return
       Scaffold(
-        resizeToAvoidBottomInset: false,
-        body:
-        Container(
+        body: SingleChildScrollView(
+          child: Container(
             width: double.maxFinite,
             decoration: AppDecoration.fillGray,
             child: Column(
               children: [
                 _buildSeven(context),
+                SizedBox(height: 20.v),
                 RefreshIndicator(
                   onRefresh: () async {
                     // Verileri güncelle
@@ -50,34 +50,27 @@ class _MainPage extends State<MainPage>  {
                     setState(() {});
                   },
                   child: SizedBox(
-                    height: 500.v,
+                    height: 600.v,
                     width: double.maxFinite,
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-
-                             _buildEventCard(context),
-                          // Align(
-                          //   alignment: Alignment.bottomCenter,
-                          //   child: Container(
-                          //     height: 150.v,
-                          //     width: double.maxFinite,
-                          //     margin: EdgeInsets.only(bottom: 68.v),
-                          //
-                          //   ),
-                          // ),
-                        ],
-                      ),
-
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        _buildEventCard(context),
+                      ],
+                    ),
                   ),
                 ),
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
               ],
             ),
           ),
-          bottomNavigationBar: Padding(
-              padding: EdgeInsets.only(left: 14.h, right: 11.h),
-              child: _buildBottomBar(context)),
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.only(left: 14.h, right: 11.h),
+          child: _buildBottomBar(context),
+        ),
       );
+
 
 
 

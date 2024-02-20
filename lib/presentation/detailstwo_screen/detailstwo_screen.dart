@@ -31,8 +31,8 @@ class DetailstwoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return
         //  organizationData.user=snapshot.data!.user!;
-        SafeArea(
-            child: Scaffold(
+
+           Scaffold(
               backgroundColor: appTheme.gray100,
                 appBar: _buildAppBar(context),
                 body: FutureBuilder<Organization>(
@@ -98,7 +98,7 @@ class DetailstwoScreen extends StatelessWidget {
                 bottomNavigationBar: Padding(
                     padding: EdgeInsets.only(left: 14.h, right: 11.h),
                     child: _buildBottomBar(context)),
-                floatingActionButton: _buildFloatingActionButton(context)));
+                floatingActionButton: _buildFloatingActionButton(context));
   }
 
   /// Section Widget

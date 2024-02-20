@@ -48,17 +48,61 @@ class OrganizationService {
         if (organization.id == null) {
           throw Exception("Belirtilen ID'ye sahip organizasyon bulunamadı.");
         }
-
+          print("geldi geldi");
         DocumentReference eventRef = firebaseStore.collection('Events').doc(id);
+        DocumentReference userRef = firebaseStore.collection('Users').doc(user.uid!);
+
+        print("aaa1"+eventRef.path);
         // Kullanıcının activities alanına organizasyonu ekle
         await firebaseStore.collection('Users').doc(user.uid).update({
           'attendedEvents': FieldValue.arrayUnion([eventRef]),
         });
+        await firebaseStore.collection('Events').doc(id).update({
+          'participants': FieldValue.arrayUnion([userRef]),
+        });
+
+        Map<String, dynamic> userEntry = {
+          'user': userRef,
+          'katıl': false,
+        };
+        await firebaseStore.collection('Events').doc(id).update({
+          'partts': FieldValue.arrayUnion([userEntry]),
+        });
+
+
+
+
+
       } catch (e) {
         print("Hata oluştu: $e");
         // Hata durumunda gerekli işlemler yapılabilir, örneğin bir hata mesajı gösterilebilir
       }
     }
+
+
+  Future<List<InfoUser>> getUsersSortedByScore() async {
+    List<InfoUser> sortedUsers = [];
+
+    QuerySnapshot usersSnapshot = await FirebaseFirestore.instance.collection('Users').orderBy('score', descending: true).get();
+
+    for (var doc in usersSnapshot.docs) {
+      var userData = doc.data() as Map<String, dynamic>; // Veri türünü doğru şekilde belirtiyoruz
+      if (userData != null) {
+        InfoUser userInfo = InfoUser();
+        userInfo.name = userData['name'];
+        userInfo.surname = userData['surname'];
+        userInfo.username = userData['username'];
+        userInfo.score = userData['score'];
+        sortedUsers.add(userInfo);
+      }
+    }
+      sortedUsers.forEach((element) {
+        print("adı"+element.name!+" skor "+ element.score!.toString());
+      });
+    return sortedUsers;
+  }
+
+
 
   getParticipantsByOrganizationId(String organizationId) async {
     Organization organization =
@@ -97,13 +141,11 @@ class OrganizationService {
       bool participated = parts[i]["katıl"];
 
       if (querySnapshot.docs.isNotEmpty) {
-        log.d("Puan ASasASasAS");
 
         // Kullanıcı bulunduğunda, katıl değerini true olarak güncelle
 
         String id=querySnapshot.docs.first.id;
         if (userRef.id == id) {
-          log.d("Puan cccccccccccccccccccccccccccc");
 
           // Kullanıcı bulunduğunda, katıl değerini true olarak güncelle
           parts[i]["katıl"] = true;
@@ -253,4 +295,51 @@ class OrganizationService {
     }
     return organization;
   }
+    Future<void> registerEvent({
+    required String title,
+    required int score,
+    required String description,
+    required String city,
+    required String town,
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId, // Eventi oluşturan kullanıcı
+    required double latitude, // Ekledik
+    required double longitude, // Ekledik
+    required List<InfoUser?> participants,
+    required List<Map<InfoUser, bool>> partts,
+  }) async {
+    try {
+      // Giriş durumunu kontrol et
+      await checkUserLoginStatus();
+
+      // Etkinlik için benzersiz bir ID oluştur
+      String eventId = firebaseStore.collection('Events').doc().id;
+
+      // Konumu GeoPoint olarak oluştur
+      GeoPoint location = GeoPoint(latitude, longitude);
+       DocumentReference userRef=firebaseStore.collection('Users').doc(userId!);
+
+      await firebaseStore.collection('Events').doc(eventId).set({
+        'id': eventId,
+        'title': title,
+        'score': score,
+        'description': description,
+        'city': city,
+        'town': town,
+        'startDate': startDate,
+        'endDate': endDate,
+        'location': location, // Konumu GeoPoint olarak kaydet
+        'user': userRef,
+        'participants': 'Users/$userId',
+        'partts': partts,
+      });
+
+      // Etkinlik başarıyla kaydedildi mesajını göstermek için bir Toast kullanılabilir
+    } catch (error) {
+      print('Error registering event: $error');
+      // Hata durumunda kullanıcıya uygun bir mesaj göstermek için bir Toast kullanılabilir
+    }
+  }
+
 }

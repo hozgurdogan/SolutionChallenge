@@ -1,4 +1,5 @@
 import 'package:ahmet_s_application2/core/app_export.dart';
+import 'package:ahmet_s_application2/presentation/award_page/award_page.dart';
 import 'package:ahmet_s_application2/service/AuthService.dart';
 import 'package:ahmet_s_application2/widgets/custom_bottom_bar.dart';
 import 'package:ahmet_s_application2/widgets/custom_elevated_button.dart';
@@ -14,7 +15,6 @@ import '../../service/UserService.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_trailing_image.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
-import '../award_screen/award_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class EditprofileScreen2 extends StatefulWidget {
@@ -41,91 +41,128 @@ class _EditprofileScreen2State extends State<EditprofileScreen2> {
   bool _isLoading = false;
   InfoUser user = InfoUser();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+bool isGoogleSignIn=false;
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      user = await UserService().getUserInfoByEmail();
-      ;
-      setState(() {
-        nameFieldController.text = user.name!;
-        surnameFieldController.text = user.surname!;
-        passwordFieldController.text = user.password!;
-        mailFieldController.text = user.email!;
-        usernameFieldController.text = user.username!;
-      });
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    isGoogleSignIn=await AuthService().isGoogleSignIn();
+    await Future.delayed(Duration.zero);
+    final user = await UserService().getUserInfoByEmail();
+    setState(() {
+      nameFieldController.text = user.name!;
+      surnameFieldController.text = user.surname!;
+      passwordFieldController.text = user.password!;
+      mailFieldController.text = user.email!;
+      usernameFieldController.text = user.username!;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: _buildAppBar(context),
-            body: SizedBox(
+    return
+     Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: _buildAppBar(context),
+        body: FutureBuilder(
+          future: UserService().getUserInfoByEmail(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Hata: ${snapshot.error}'));
+            } else {
+              final user = snapshot.data!;
+              return SizedBox(
                 width: SizeUtils.width,
                 child: SingleChildScrollView(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: Form(
-                        key: _formKey,
-                        child: SizedBox(
-                            width: double.maxFinite,
-                            child: Column(children: [
-                              //  _buildHorizontalScroll(context),
-                              _buildBannerStack(context),
-                              SizedBox(height: 6.v),
-                              _buildFifteen(context),
-                              SizedBox(height: 22.v),
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                      padding: EdgeInsets.only(left: 22.h),
-                                      child: Text("Username",
-                                          style: theme.textTheme.titleSmall))),
-                              SizedBox(height: 3.v),
-                              _buildUsernameText(context),
-                              SizedBox(height: 22.v),
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                      padding: EdgeInsets.only(left: 22.h),
-                                      child: Text("Email",
-                                          style: theme.textTheme.titleSmall))),
-                              SizedBox(height: 3.v),
-                              _buildEmailText(context),
-                              SizedBox(height: 22.v),
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                      padding: EdgeInsets.only(left: 22.h),
-                                      child: Text("Password",
-                                          style: theme.textTheme.titleSmall))),
-                              SizedBox(height: 3.v),
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: SizedBox(
+                      width: double.maxFinite,
+                      child: Column(
+                        children: [
+                          // _buildHorizontalScroll(context),
+                          _buildBannerStack(context),
+                          SizedBox(height: 6.v),
+                          _buildFifteen(context),
+                          SizedBox(height: 22.v),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 22.h),
+                              child: Text(
+                                "Username",
+                                style: theme.textTheme.titleSmall,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 3.v),
+                          _buildUsernameText(context),
+                          SizedBox(height: 22.v),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 22.h),
+                              child: Text(
+                                "Email",
+                                style: theme.textTheme.titleSmall,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 3.v),
+                          _buildEmailText(context),
+                          SizedBox(height: 22.v),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 22.h),
+                              child: Text(
+                                "Password",
+                                style: theme.textTheme.titleSmall,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 3.v),
+                          if ( isGoogleSignIn== false) ...[
+                            _buildPasswordText(context),
+                          ],
+                          SizedBox(height: 22.v),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 22.h),
+                            ),
+                          ),
+                          SizedBox(height: 3.v),
+                          //_buildPhoneNumberText(context),
+                          SizedBox(height: 22.v),
+                          _buildTwentyFive(context),
+                          SizedBox(height: 9.v),
+                          _buildEditProfileButton(context),
+                          SizedBox(height: 5.v),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.only(left: 29.h, right: 26.h),
+          child: _buildBottomBar(context),
+        ),
+      );
 
-                            if (AuthService().isGoogleSignIn() == false) ...[
-                              _buildPasswordText(context),],
-                              SizedBox(height: 22.v),
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 22.h),
-                                  )),
-                              SizedBox(height: 3.v),
-                              //_buildPhoneNumberText(context),
-                              SizedBox(height: 22.v),
-                              _buildTwentyFive(context),
-                              SizedBox(height: 9.v),
-                              _buildEditProfileButton(context),
-                              SizedBox(height: 5.v)
-                            ]))))),
-            bottomNavigationBar: Padding(
-                padding: EdgeInsets.only(left: 29.h, right: 26.h),
-                child: _buildBottomBar(context))));
   }
-
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
         leadingWidth: 54.h,
@@ -343,20 +380,7 @@ class _EditprofileScreen2State extends State<EditprofileScreen2> {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.h),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Expanded(
-              child: Padding(
-                  padding: EdgeInsets.only(top: 1.v, right: 7.h),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.only(left: 62.h),
-                            child: Text("City",
-                                style: theme.textTheme.titleSmall)),
-                        SizedBox(height: 1.v),
-                        _buildCityCard(context)
-                      ]))),
-          _buildTownCard(context)
+
         ]));
   }
 
@@ -415,7 +439,7 @@ class _EditprofileScreen2State extends State<EditprofileScreen2> {
   Widget getCurrentPage(String currentRoute) {
     switch (currentRoute) {
       case AppRoutes.awardScreen:
-        return AwardScreen();
+        return AwardPage();
       default:
         return DefaultWidget();
     }

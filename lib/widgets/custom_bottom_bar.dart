@@ -1,5 +1,5 @@
 import 'package:ahmet_s_application2/core/app_export.dart';
-import 'package:ahmet_s_application2/presentation/award_screen/award_screen.dart';
+import 'package:ahmet_s_application2/presentation/award_page/award_page.dart';
 import 'package:ahmet_s_application2/presentation/main_page/main_page.dart';
 import 'package:ahmet_s_application2/presentation/profile_screen/profile.dart';
 import 'package:flutter/material.dart';
@@ -105,10 +105,12 @@ class CustomBottomBarState extends State<CustomBottomBar> {
             }
           if(selectedIndex==1)
           {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => AwardScreen(),));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => AwardPage(),));
           } if(selectedIndex==2)
           {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(),));
+            if (context != null) {
+              Navigator.of(context)!.push(MaterialPageRoute(builder: (context) => ProfilePage()));
+            }
           }
           setState(() {});
         },
